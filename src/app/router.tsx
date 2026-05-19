@@ -10,6 +10,7 @@ import { ChatPage } from '@/pages/chat/ChatPage'
 import { HomePage } from '@/pages/home/HomePage'
 import { LoginPage } from '@/pages/login/LoginPage'
 import { ProductDetailPage } from '@/pages/product-detail/ProductDetailPage'
+import { parseCatalogSearch } from '@/shared/lib/catalog-search'
 import { RootLayout } from '@/widgets/layout/RootLayout'
 
 const rootRoute = createRootRoute({
@@ -28,9 +29,10 @@ const loginRoute = createRoute({
   component: LoginPage,
 })
 
-const catalogRoute = createRoute({
+export const catalogRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/catalog',
+  validateSearch: parseCatalogSearch,
   component: CatalogPage,
 })
 

@@ -1,50 +1,39 @@
-# Task 6 — React SPA (Vite + TanStack + Tailwind)
+# Task 6 — Bazaar (Vite + TanStack + Tailwind)
 
-Educational multi-page React SPA aligned with the Task 5 reference app (catalog, auth, cart), rebuilt on a modern stack: **Vite**, **TanStack Router**, **TanStack Query**, **TypeScript**, and **Tailwind CSS**.
+Universal multi-category marketplace SPA powered by [DummyJSON](https://dummyjson.com).  
+Built with React 19, TypeScript, Vite, TanStack Router, TanStack Query, and Tailwind CSS v4.
 
-> **Status:** project scaffold only — routes and providers are wired; business features are not implemented yet.
+## Features
 
-## Planned functionality
-
-| Route | Purpose |
+| Route | Description |
 | --- | --- |
-| `/` | Home |
-| `/login` | Authentication via DummyJSON |
-| `/catalog` | Product list (search, filters, sorting, pagination) |
-| `/products/:productId` | Product details |
-| `/cart` | Shopping cart |
-| `/chat` | WebSocket chat (extra) |
+| `/` | Home — all categories, top-rated picks |
+| `/login` | Sign-in via `POST /auth/login` (session in `localStorage`) |
+| `/catalog` | Shop — search, category, sort, pagination (all DummyJSON categories) |
+| `/products/:productId` | Product details, gallery, add to bag |
+| `/cart` | Shopping bag with persistence |
+| `/chat` | WebSocket chat placeholder (extra) |
 
-Data source: [DummyJSON](https://dummyjson.com). WebSocket (extra): `wss://ws.ifelse.io`.
+Unlike the Task 5 reference app, **no category whitelist** is applied — beauty, groceries, furniture, and every other DummyJSON department are available.
 
 ## Tech stack
 
-### Runtime
-
 - `react`, `react-dom`
-- `@tanstack/react-router` — routing
-- `@tanstack/react-query` — server state & caching
-
-### UI
-
+- `@tanstack/react-router`
+- `@tanstack/react-query`
 - `tailwindcss`, `@tailwindcss/vite`
-
-### Tooling
-
-- `vite`, `@vitejs/plugin-react`
-- `typescript`
-- `eslint`, `typescript-eslint`
+- `vite`, `typescript`, `eslint`
 
 ## Project structure
 
 ```
 src/
-  app/           # router, query client, providers
-  pages/         # route-level screens
-  widgets/       # layout & composite UI
-  features/      # feature modules (auth, cart, …)
-  entities/      # API models & data access
-  shared/        # config, HTTP client, reusable UI
+  app/              # router, query client, providers
+  entities/         # DummyJSON types & API + Query hooks
+  features/         # auth, cart (context + persistence)
+  pages/            # route screens
+  shared/           # UI kit, HTTP client, catalog helpers
+  widgets/          # layout shell
 ```
 
 ## Getting started
@@ -53,7 +42,7 @@ src/
 
 ```bash
 npm install
-cp .env.example .env   # optional — defaults work for local dev
+cp .env.example .env   # optional — defaults work locally
 npm run dev
 ```
 
@@ -63,17 +52,17 @@ Open [http://localhost:5173](http://localhost:5173).
 
 | Command | Description |
 | --- | --- |
-| `npm run dev` | Start dev server |
-| `npm run build` | Type-check and production build |
-| `npm run preview` | Preview production build |
-| `npm run lint` | Run ESLint (`any` is forbidden) |
+| `npm run dev` | Dev server |
+| `npm run build` | Type-check + production build |
+| `npm run preview` | Preview `dist/` |
+| `npm run lint` | ESLint (`any` is forbidden) |
 
-## Environment variables
+## Environment
 
-| Variable | Default | Description |
-| --- | --- | --- |
-| `VITE_DUMMYJSON_BASE_URL` | `https://dummyjson.com` | REST API base URL |
-| `VITE_WS_URL` | `wss://ws.ifelse.io` | WebSocket endpoint (chat extra) |
+| Variable | Default |
+| --- | --- |
+| `VITE_DUMMYJSON_BASE_URL` | `https://dummyjson.com` |
+| `VITE_WS_URL` | `wss://ws.ifelse.io` |
 
 ## Deployment
 
@@ -83,4 +72,4 @@ Deploy the `dist` folder to Netlify, Vercel, or GitHub Pages.
 
 ## Reference
 
-Feature scope mirrors [TASK5_INNO](../TASK5_INNO) (Webpack + Redux Toolkit + RTK Query + React Router).
+Feature scope inspired by [TASK5_INNO](../TASK5_INNO) (Webpack + Redux + RTK Query), with a different stack, visual theme, and unrestricted catalog.
