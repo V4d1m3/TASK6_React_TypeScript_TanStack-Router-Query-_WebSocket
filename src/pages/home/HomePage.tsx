@@ -10,15 +10,16 @@ import {
   catalogSearchDefaults,
   parseSortKey,
 } from '@/shared/lib/catalog-search'
+import { formatApiError } from '@/shared/lib/format-api-error'
 import { Button } from '@/shared/ui/Button'
 import { ProductCard } from '@/shared/ui/ProductCard'
 import { StateMessage } from '@/shared/ui/StateMessage'
 
 export function HomePage() {
   const { isAuthenticated } = useAuth()
-  const { data: categories, isLoading: categoriesLoading } = useProductCategoriesQuery()
+  const categoriesQuery = useProductCategoriesQuery()
   const featuredSort = parseSortKey('rating-desc')
-  const { data: featured, isLoading: featuredLoading } = useProductListQuery({
+  const featuredQuery = useProductListQuery({
     limit: 4,
     skip: 0,
     sortBy: featuredSort.sortBy,
@@ -82,11 +83,20 @@ export function HomePage() {
           </Link>
         </div>
 
-        {categoriesLoading ? (
+        {categoriesQuery.isLoading ? (
           <StateMessage title="Loading categories…" />
+        ) : categoriesQuery.isError ? (
+          <StateMessage
+            title="Could not load categories"
+            message={formatApiError(
+              categoriesQuery.error,
+              'Failed to load category list.',
+            )}
+            tone="error"
+          />
         ) : (
           <ul className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-            {(categories ?? []).map((category) => (
+            {(categoriesQuery.data ?? []).map((category) => (
               <li key={category.slug}>
                 <Link
                   to="/catalog"
@@ -104,13 +114,24 @@ export function HomePage() {
       <section className="border-t border-line bg-surface-raised/60 py-12">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <h2 className="font-display text-2xl font-bold text-ink">Top rated this week</h2>
-          {featuredLoading ? (
+          {featuredQuery.isLoading ? (
             <div className="mt-6">
               <StateMessage title="Loading picks…" />
             </div>
+          ) : featuredQuery.isError ? (
+            <div className="mt-6">
+              <StateMessage
+                title="Could not load featured products"
+                message={formatApiError(
+                  featuredQuery.error,
+                  'Failed to load featured picks.',
+                )}
+                tone="error"
+              />
+            </div>
           ) : (
             <div className="mt-6 grid gap-5 sm:grid-cols-2 lg:grid-cols-4">
-              {(featured?.products ?? []).map((product, index) => (
+              {(featuredQuery.data?.products ?? []).map((product, index) => (
                 <ProductCard
                   key={product.id}
                   product={product}

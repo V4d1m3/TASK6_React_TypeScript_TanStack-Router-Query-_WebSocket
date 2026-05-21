@@ -1,4 +1,5 @@
 import type { ProductCategory } from '@/entities/dummy-json/model/types'
+import { formatApiError } from '@/shared/lib/format-api-error'
 
 export function formatPrice(value: number): string {
   return new Intl.NumberFormat('en-US', {
@@ -22,8 +23,5 @@ export function formatCategoryLabel(category: string | ProductCategory): string 
 }
 
 export function formatLoginError(error: unknown): string {
-  if (error instanceof Error && error.message.length > 0) {
-    return error.message
-  }
-  return 'Sign-in failed. Try another DummyJSON test account.'
+  return formatApiError(error, 'Sign-in failed. Try another DummyJSON test account.')
 }
