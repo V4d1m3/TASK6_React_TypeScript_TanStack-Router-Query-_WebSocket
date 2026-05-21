@@ -2,15 +2,11 @@ import {
   createRootRoute,
   createRoute,
   createRouter,
+  lazyRouteComponent,
   redirect,
 } from '@tanstack/react-router'
-import { CartPage } from '@/pages/cart/CartPage'
-import { CatalogPage } from '@/pages/catalog/CatalogPage'
-import { ChatPage } from '@/pages/chat/ChatPage'
-import { HomePage } from '@/pages/home/HomePage'
-import { LoginPage } from '@/pages/login/LoginPage'
-import { ProductDetailPage } from '@/pages/product-detail/ProductDetailPage'
 import { parseCatalogSearch } from '@/shared/lib/catalog-search'
+import { RouteFallback } from '@/shared/ui/RouteFallback'
 import { RootLayout } from '@/widgets/layout/RootLayout'
 
 const rootRoute = createRootRoute({
@@ -20,38 +16,56 @@ const rootRoute = createRootRoute({
 const indexRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/',
-  component: HomePage,
+  component: lazyRouteComponent(
+    () => import('@/pages/home/HomePage'),
+    'HomePage',
+  ),
 })
 
 const loginRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/login',
-  component: LoginPage,
+  component: lazyRouteComponent(
+    () => import('@/pages/login/LoginPage'),
+    'LoginPage',
+  ),
 })
 
 export const catalogRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/catalog',
   validateSearch: parseCatalogSearch,
-  component: CatalogPage,
+  component: lazyRouteComponent(
+    () => import('@/pages/catalog/CatalogPage'),
+    'CatalogPage',
+  ),
 })
 
 const cartRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/cart',
-  component: CartPage,
+  component: lazyRouteComponent(
+    () => import('@/pages/cart/CartPage'),
+    'CartPage',
+  ),
 })
 
 const productDetailRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/products/$productId',
-  component: ProductDetailPage,
+  component: lazyRouteComponent(
+    () => import('@/pages/product-detail/ProductDetailPage'),
+    'ProductDetailPage',
+  ),
 })
 
 const chatRoute = createRoute({
   getParentRoute: () => rootRoute,
   path: '/chat',
-  component: ChatPage,
+  component: lazyRouteComponent(
+    () => import('@/pages/chat/ChatPage'),
+    'ChatPage',
+  ),
 })
 
 const notFoundRoute = createRoute({
@@ -72,7 +86,19 @@ const routeTree = rootRoute.addChildren([
   notFoundRoute,
 ])
 
-export const router = createRouter({ routeTree })
+function routerBasepath(): string {
+  const base = import.meta.env.BASE_URL
+  if (base === '/') return '/'
+  return base.endsWith('/') ? base.slice(0, -1) : base
+}
+
+export const router = createRouter({
+  routeTree,
+  basepath: routerBasepath(),
+  defaultPendingComponent: RouteFallback,
+  defaultPendingMs: 100,
+  defaultPendingMinMs: 200,
+})
 
 declare module '@tanstack/react-router' {
   interface Register {

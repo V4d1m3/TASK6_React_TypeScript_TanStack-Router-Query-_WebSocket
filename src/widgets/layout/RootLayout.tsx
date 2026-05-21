@@ -97,11 +97,11 @@ export function RootLayout() {
         ) : null}
       </header>
 
-      <main className="flex-1">
+      <main className="flex min-h-0 flex-1 flex-col">
         <Outlet />
       </main>
 
-      <footer className="mt-auto border-t border-line bg-surface-raised py-8 text-center text-sm text-ink-muted">
+      <footer className="mt-auto shrink-0 border-t border-line bg-surface-raised py-8 text-center text-sm text-ink-muted">
         <p className="font-display text-lg text-brand">Bazaar</p>
         <p className="mt-1">Universal marketplace demo · DummyJSON API</p>
       </footer>

@@ -28,7 +28,12 @@ export function ProductCard({ product, imageLoading = 'lazy' }: ProductCardProps
         <img
           src={product.thumbnail}
           alt=""
+          width={320}
+          height={320}
+          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
           loading={imageLoading}
+          fetchPriority={imageLoading === 'eager' ? 'high' : 'auto'}
+          decoding="async"
           className="h-full w-full object-cover transition duration-300 group-hover:scale-105"
         />
         <span

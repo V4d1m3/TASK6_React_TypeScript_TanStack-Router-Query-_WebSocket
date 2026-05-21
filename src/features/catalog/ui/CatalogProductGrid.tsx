@@ -2,7 +2,9 @@ import type { ProductListItem } from '@/entities/dummy-json/model/types'
 import { formatCategoryLabel } from '@/shared/lib/format'
 import { CATALOG_VIEW_ALL, type CatalogSearch } from '@/shared/lib/catalog-search'
 import { Button } from '@/shared/ui/Button'
+import { CATALOG_PAGE_SIZE } from '@/shared/lib/catalog-search'
 import { ProductCard } from '@/shared/ui/ProductCard'
+import { ProductGridSkeleton } from '@/shared/ui/ProductGridSkeleton'
 import { StateMessage } from '@/shared/ui/StateMessage'
 
 type CatalogProductGridProps = {
@@ -33,7 +35,13 @@ export function CatalogProductGrid({
   onPageChange,
 }: CatalogProductGridProps) {
   if (isLoading) {
-    return <StateMessage title="Loading products…" />
+    return (
+      <div className="space-y-4">
+        <div className="h-5 w-56 animate-pulse rounded bg-surface-muted" aria-hidden />
+        <ProductGridSkeleton count={CATALOG_PAGE_SIZE} />
+        <div className="mt-10 h-11" aria-hidden />
+      </div>
+    )
   }
 
   if (isError) {

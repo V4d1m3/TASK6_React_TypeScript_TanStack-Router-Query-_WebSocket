@@ -13,6 +13,8 @@ import {
 import { formatApiError } from '@/shared/lib/format-api-error'
 import { Button } from '@/shared/ui/Button'
 import { ProductCard } from '@/shared/ui/ProductCard'
+import { CategoryGridSkeleton } from '@/shared/ui/CategoryGridSkeleton'
+import { ProductGridSkeleton } from '@/shared/ui/ProductGridSkeleton'
 import { StateMessage } from '@/shared/ui/StateMessage'
 
 export function HomePage() {
@@ -84,7 +86,7 @@ export function HomePage() {
         </div>
 
         {categoriesQuery.isLoading ? (
-          <StateMessage title="Loading categories…" />
+          <CategoryGridSkeleton />
         ) : categoriesQuery.isError ? (
           <StateMessage
             title="Could not load categories"
@@ -115,9 +117,7 @@ export function HomePage() {
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <h2 className="font-display text-2xl font-bold text-ink">Top rated this week</h2>
           {featuredQuery.isLoading ? (
-            <div className="mt-6">
-              <StateMessage title="Loading picks…" />
-            </div>
+            <ProductGridSkeleton count={4} className="mt-6 lg:grid-cols-4" />
           ) : featuredQuery.isError ? (
             <div className="mt-6">
               <StateMessage
